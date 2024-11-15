@@ -1,10 +1,13 @@
 name: Website Deployment
+
 on:
   push:
     branches:
       - main
+
 jobs:
   lint:
+    name: Lint Code
     runs-on: ubuntu-latest
     steps:
       - name: Get code
@@ -19,7 +22,9 @@ jobs:
         run: npm ci
       - name: Lint code
         run: npm run lint
+
   test:
+    name: Run Tests
     runs-on: ubuntu-latest
     steps:
       - name: Get code
@@ -33,14 +38,19 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Test code
+        id: run-tests
+
         run: npm run test
       - name: Upload test report
-        if:
+  
+        if: failure() && steps.run-tests.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
           name: test-report
           path: test.json
+
   build:
+    name: Build Website
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -62,7 +72,9 @@ jobs:
         with:
           name: dist-files
           path: dist
+
   deploy:
+    name: Deploy Website
     needs: build
     runs-on: ubuntu-latest
     steps:
