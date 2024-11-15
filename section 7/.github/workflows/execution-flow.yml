@@ -39,8 +39,7 @@ jobs:
         run: npm ci
       - name: Test code
         id: run-tests
-
-        run: npm run test
+        run: npm run test 
       - name: Upload test report
   
         if: failure() && steps.run-tests.outcome == 'failure'
@@ -86,3 +85,11 @@ jobs:
         run: ls
       - name: Deploy
         run: echo "Deploying..."
+  report: 
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output information
+        run:
+          echo "something went wrong"
+          echo ${{github}}
