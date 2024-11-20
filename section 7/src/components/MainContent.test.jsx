@@ -19,6 +19,7 @@ describe('MainContent', () => {
 
     const button = screen.getByRole('button');
     await userEvent.click(button);
-    expect(screen.getByTestId('help-are')).toBeInTheDocument();
+    //brokecodeherehelp-area_notare
+    expect(screen.getByTestId('help-are')).toBeInTheDocument(); 
   });
 });
