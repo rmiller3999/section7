@@ -18,9 +18,9 @@ jobs:
             - node-version: 18
             - operating-system: ubuntu-latest
           exclude: 
-            - nade-version: 12
+            - node-version: 12
               operating-system: windows-latest
-              
+
     runs-on: ${{matrix.operating-system}}
     steps:
         - name: Get Code
