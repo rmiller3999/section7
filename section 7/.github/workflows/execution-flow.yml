@@ -3,7 +3,9 @@ name: Website Deployment
 on:
   push:
     branches:
-      - main
+      - main # Trigger workflow when pushing to 'main'
+      - master
+  workflow_dispatch: # Allow manual triggering
 
 jobs:
   lint:
