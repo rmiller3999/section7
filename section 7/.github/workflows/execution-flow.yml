@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - master
+      - new
   workflow_dispatch: # Allow manual triggering
 
 jobs:

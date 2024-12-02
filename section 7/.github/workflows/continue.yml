@@ -4,7 +4,8 @@ on:
   push:
     branches:
       - main
-      - master 
+      - master
+      - new 
   workflow_dispatch: # Allow manual triggering
 
 
