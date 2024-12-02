@@ -5,33 +5,32 @@ on:
     branches:
       - main
       - master
-  workflow_dispatch: # Allow manual triggering
-  
+  workflow_dispatch:  # Allow manual triggering
+
 jobs:
-  build: 
+  build:
     strategy:
       matrix:
-        node-version: [12, 14, 16, 18]  # Including node version 18
-        operating-system: [ubuntu-latest]
-      # Define include and exclude at the matrix level
-      include:
-        - node-version: 18
-          operating-system: ubuntu-latest
+        node-version: [12, 14, 16, 18]  # Node versions to test
+        operating-system: [ubuntu-latest]  # OS for testing
       exclude:
         - node-version: 12
-          operating-system: windows-latest
+          operating-system: windows-latest  # Exclude this combination
 
     runs-on: ${{ matrix.operating-system }}
-    continue-on-error: true # Apply globally for the entire job
+    continue-on-error: true  # Continue even if some matrix jobs fail
 
     steps:
       - name: Get Code
         uses: actions/checkout@v4
+
       - name: Install NodeJS
         uses: actions/setup-node@v4
-        with: 
-          node-version: ${{ matrix.node-version }}  # Correctly reference --node-version
+        with:
+          node-version: ${{ matrix.node-version }}  # Use the matrix version
+
       - name: Install Dependencies
         run: npm ci
+
       - name: Build project
         run: npm run build
