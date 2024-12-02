@@ -1,0 +1,36 @@
+name: Matrix Demo
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        node-version: [12, 14, 16, 18]  # Node versions to test
+        operating-system: [ubuntu-latest]  # OS for testing
+      exclude:
+        - node-version: 12
+          operating-system: windows-latest  # Exclude this combination
+
+    runs-on: ${{ matrix.operating-system }}
+    continue-on-error: true  # Continue even if some matrix jobs fail
+
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v4
+
+      - name: Install NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}  # Use the matrix version
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
