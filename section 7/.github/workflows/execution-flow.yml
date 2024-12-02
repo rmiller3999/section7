@@ -3,7 +3,7 @@ name: Website Deployment
 on:
   push:
     branches:
-      - main # Trigger workflow when pushing to 'main'
+      - main
       - master
   workflow_dispatch: # Allow manual triggering
 
@@ -21,7 +21,6 @@ jobs:
           path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
-
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Lint code
@@ -40,14 +39,12 @@ jobs:
           path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
-
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Test code
         id: run-tests
         run: npm run test 
       - name: Upload test report
-  
         if: failure() && steps.run-tests.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
@@ -68,7 +65,6 @@ jobs:
           path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
-
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Build website
@@ -93,12 +89,12 @@ jobs:
         run: ls
       - name: Deploy
         run: echo "Deploying..."
+
   report: 
-    needs: [lint,deploy]
-    if: failure()
+    name: Report Failures
+    needs: [lint, deploy]
+    if: ${{ failure() }}
     runs-on: ubuntu-latest
     steps:
-      - name: Output information
-        run:
-          echo "something went wrong"
-          echo ${{toJSON(github)}}
+      - name: Output GitHub context
+        run: echo "${{ toJSON(github) }}"

@@ -19,7 +19,6 @@ jobs:
           path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
-
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Lint code
@@ -38,16 +37,12 @@ jobs:
           path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
-
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Test code
-
-        continue-on-error: true
-        id: run-tests
         run: npm run test 
       - name: Upload test report
-  
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: test-report
@@ -67,7 +62,6 @@ jobs:
           path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
-
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Build website
@@ -92,12 +86,13 @@ jobs:
         run: ls
       - name: Deploy
         run: echo "Deploying..."
+
   report: 
-    needs: [lint,deploy]
+    needs: [lint, test]  # This is more relevant for lint and test jobs
     if: failure()
     runs-on: ubuntu-latest
     steps:
       - name: Output information
-        run:
-          echo "something went wrong"
-          echo ${{toJSON(github)}}
+        run: |
+          echo "Something went wrong"
+          echo "${{ toJSON(github) }}"
